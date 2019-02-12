@@ -1,4 +1,6 @@
 var express = require('express');
+let request = require('request');
+var mysql = require('mysql');
 //var path = require('path');
 //var gpio = require('rpi-gpio');
 //var Gpio = require('onoff').Gpio;
@@ -178,6 +180,52 @@ var deviceRouter = require('./Router/device.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+let url = `http://api.openweathermap.org/data/2.5/weather?lat=53.1982&lon=-8.5691&appid=3dc14e5a852359d8ae6d0097025ce62e`
+request(url, function (err, response, body) {   
+  if(err){
+    console.log('error:', error);
+  } else {
+    var intervalID = setInterval(checkWeatherAPI, 900000);
+    let weather = JSON.parse(body)
+
+       var Tempurature = weather.main.temp - 273.15
+       var Pressure = weather.main.pressure
+       var Humidity = weather.main.humidity
+       var WindSpeed = weather.wind.speed
+       var Description = weather.weather[0].description
+       var CloudCover = weather.clouds.all
+       var Area = weather.name
+  }
+
+function checkWeatherAPI() {
+    var con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "password",
+        database: "p4db"
+      });
+      con.connect(function(err) {
+        if (err) throw err;
+        console.log("Connected!");
+        let weather = JSON.parse(body);
+        var sql = "INSERT INTO weather (Area, Tempurature, Pressure, Humidity, Windspeed, Description, Cloudcover) VALUES ('"+Area+"','"+Tempurature+"','"+Pressure+"','"+Humidity+"','"+WindSpeed+"','"+Description+"','"+CloudCover+"')";
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log("1 record inserted");
+        });
+      });
+    console.log(Area);
+    console.log(Tempurature);
+    console.log(Pressure);
+    console.log(Humidity);
+    console.log(WindSpeed);
+    console.log(Description);
+    console.log(CloudCover);
+    
+  }
+
+});
 // app.all( '/createuser.html', function(req,res, next){
 //     console.log("checking welcome");
 //     if (req.session && req.session.check){
