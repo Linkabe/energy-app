@@ -14,7 +14,6 @@ router.get('/', function(req, res, next) {
     //console.log("in users home");
 });
 
-
 router.get('/delete/:id', function(req,res,next){
     const id = req.param("id");
     dao2.delete(id,function(result){
@@ -27,7 +26,7 @@ router.get('/findbyid/:id', function(req,res,next){
         res.send(result[0]);
     })
 });
-router.post('/createme', function(req,res,next){
+router.post('/createheat', function(req,res,next){
     const heatingup = req.body;
     dao2.insert(heatingup, function(result){
         res.send("done");

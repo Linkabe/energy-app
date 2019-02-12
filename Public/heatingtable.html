@@ -71,9 +71,9 @@
 <br>
 <div>
                     <!-- <form action="/heating/on" method="post"> -->
-                    <button type="submit" class="button">Heating is On </button>
+                    <button type="submit" class="buttonhon">Heating is On </button>
 
-                    <button type="submit" formmethod="post" formaction="/heating/off" class="button button3">Heating is Off</button>
+                    <button type="submit" formmethod="post" formaction="/heating/off" class="buttonhoff">Heating is Off</button>
                     </form>
 </div>
 
@@ -155,42 +155,40 @@
 
             });
 
-            function populateTable(heating) {
+            function populateTable(heatings) {
                 var table = document.getElementById("Heating_table");
-                var len = heating.length;
+                var len = heatings.length;
 
                 for (var i = 0; i < len; i++) {
-                    var user = heating[i];
-                    var markup = "<tr><td><input type='checkbox' name='record'></td><td id='House_Temp' class='HouseTemp'>" + user.HouseTemp + "</td><td id='Humid_ity' class='Humidity'>" + user.Humidity + "</td><td id='Status' class='status'>" + user.Status + "</td><td id='date1' class='Date'>" + user.Date + "</td></tr>";
+                    var Power = heatings[i];
+                    var markup = "<tr><td><input type='checkbox' name='record'></td><td id='House_Temp' class='HouseTemp'>" + Power.HouseTemp + "</td><td id='Humid_ity' class='Humidity'>" + Power.Humidity + "</td><td id='Status' class='status'>" + Power.Status + "</td><td id='date1' class='Date'>" + Power.Date + "</td></tr>";
                     $("table tbody").append(markup);
                 }
             }
 
             $(".buttonhon").click(function () {
                 var heatingup ={
-                 Housetemp: document.getElementsByClassName("HouseTemp")[1].innerHTML,
-                 humidity: document.getElementsByClassName("Humidity")[1].innerHTML,
-                 Status: "Off",  
+                 Housetemp: document.getElementsByClassName("HouseTemp")[0].innerHTML,
+                 Humid: document.getElementsByClassName("Humidity")[0].innerHTML,
+                 Status: "On",  
                 };
-                 console.log(heatingup);
-                 console.log("this is here");
-                var markup = "<tr><td><input type='checkbox' name='record'><td id='House_Temp' class='HouseTemp'>" + user.HouseTemp + "</td><td id='Humid_ity' class='Humidity'>" + user.Humidity + "</td><td id='Status' class='status'>" + user.Status + "</td><td id='date1' class='Date'>" + user.Date + "</td></tr>";
-                $("table tbody").append(markup);
-                 $.ajax({
-                    url: "/heating/createme",
-                    method: "POST",
-                    data: device,
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
+                //  console.log(heatingup);
+                //  $.ajax({
+                //     url: "/heating/createheat",
+                //     method: "POST",
+                //     data: heatingup,
+                //     dataType: "HTML",
+                //     success: function (result) {
+                //         console.log(result);
+                //         $('#response').html(result);
+                //     },
+                //     error: function (xhr, status, error) {
+                //         console.log("error: " + error);
+                //     }
+                // });
+                console.log(heatingup);
                 $.ajax({
-                    url: "/heating/updatehon",
+                    url: "/device/updatehon",
                     method: "POST",
                     data: "",
                     dataType: "HTML",
@@ -205,24 +203,24 @@
             });
             $(".buttonhoff").click(function () {
                 var heatingup ={
-                 House_Temp: document.getElementsByClassName("HouseTemp")[1].innerHTML,
-                 Humid_ity: document.getElementsByClassName("Humidity")[1].innerHTML,
-                 Status: "On",  
+                 Housetemp: document.getElementsByClassName("HouseTemp")[0].innerHTML,
+                 Humid: document.getElementsByClassName("Humidity")[0].innerHTML,
+                 Status: "Off",  
                 };
                  console.log(heatingup);
-                 $.ajax({
-                    url: "/heating/createme",
-                    method: "POST",
-                    data: device,
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
+                //  $.ajax({
+                //     url: "/heating/createheat",
+                //     method: "POST",
+                //     data: heatingup,
+                //     dataType: "HTML",
+                //     success: function (result) {
+                //         console.log(result);
+                //         $('#response').html(result);
+                //     },
+                //     error: function (xhr, status, error) {
+                //         console.log("error: " + error);
+                //     }
+                // });
                 $.ajax({
                     url: "/heating/updatehoff",
                     method: "POST",

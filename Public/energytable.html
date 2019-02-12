@@ -71,7 +71,6 @@
     </div>
 </nav>
 
-
 <div class="container">
     <div class="row centered-form">
         <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
@@ -82,26 +81,15 @@
                             <div class="col-xs-6 col-sm-6 col-md-6">
                                 <div class="form-group">
                                     <input type="number" id="ID" name="id" class="form-control input-sm" style="display: none">
-                                    <input type="text" name="HouseTemp" id="House_Temp" class="form-control input-sm" placeholder="House Temp">
+                                    <input type="text" name="device" id="Device" class="form-control input-sm" placeholder="Source">
                                 </div>
                             </div>
                             <div class="col-xs-6 col-sm-6 col-md-6">
                                 <div class="form-group" style="text-align: right">
-                                    <input type="text" name="Power" id="Power_Usg" class="form-control input-sm" placeholder="Power Usage">
+                                    <input type="text" name="status" id="Status" class="form-control input-sm" placeholder="Status">
                                 </div>
                             </div>
-                            <div class="col-xs-6 col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    <input type="text" name="TherrmostatStats" id="Thermo_Stat" class="form-control input-sm" placeholder="Thermostat Status">
-                                </div>
-                            </div>
-                            <div class="col-xs-6 col-sm-6 col-md-6">
-                                <div class="form-group">
-                                    Date of Birth:  <input type="date" name="Date" id="date1" class="form-control input-sm">
-                                </div>
-                            </div>
-
-                            <input type="button" id="createuser" value="Update Account" class="btn btn-info btn-block" style="display: none">
+                            <input type="button" id="createdevice" value="Update Device" class="btn btn-info btn-block" style="display: none">
                             <input type="button" id="Clear" value="Clear" class="btn btn-info btn-block" style="display: none">
                         </div>
                     </div>
@@ -126,7 +114,7 @@
       
 </table>
 <h4>&nbsp;&nbsp;Options</h4>
-            <form action="/mainpower/on" method="post">&nbsp;
+            <!-- <form action="/mainpower/on" method="post">&nbsp; -->
             <button type="submit" class="buttonMon">On</button>
             <button type="submit" formmethod="post" formaction="/mainpower/off" class="buttonMoff">Off</button>
             </form>
@@ -135,7 +123,7 @@
             <button type="submit" formmethod="post" formaction="/solarpower/off" class="buttonSoff">Off</button>
             </form><br><br><br>
             
-
+<div><button type="button" class="create-row">Create Source</button></div>
 <div><button type="button" class="delete-row">Delete Row</button></div>
 <div><button type="button" class="edit-row">Edit Row</button></div>
 </body>
@@ -193,24 +181,29 @@
 
             });
 
+            $(".create-row").click(function() {
+                        document.getElementById("inputForm").style.display="block";
+                        document.getElementById("createdevice").style.display="block";
+                        document.getElementById("Clear").style.display="block";
+            });
 
             $('#createdevice').click(function () {
                 document.getElementById("inputForm").style.display="none";
                 document.getElementById("createdevice").style.display="none";
                 document.getElementById("Clear").style.display="none";
-                var energy = {
+                var Power = {
                     id: $("input[name='ID']").val(),
-                    MainPower: $("input[name='mainpower']").val(),
+                    MPower: $("input[name='mainpower']").val(),
                     Status: $("input[name='status']").val(),
                 };
-                console.log(device);
+                console.log(Power);
                 console.log("this is here");
-                var markup = "<tr><td><input type='checkbox' name='record'></td><td id='MainPower' class='mainpower'>" + energy.MainPower + "</td><td id='Status' class='status'>" + energy.Status + "</td></tr>";
+                var markup = "<tr><td><input type='checkbox' name='record'></td><td id='MainPower' class='mainpower'>" + Power.MPower + "</td><td id='Status' class='status'>" + Power.Status + "</td></tr>";
                 $("table tbody").append(markup);
                 $.ajax({
-                    url: "/energy/createdevice",
+                    url: "/energy/createmain",
                     method: "POST",
-                    data: device,
+                    data: Power,
                     dataType: "HTML",
                     success: function (result) {
                         console.log(result);
@@ -246,15 +239,13 @@
                         document.getElementById("inputForm").style.display="block";
                         document.getElementById("createdevice").style.display="block";
                         document.getElementById("Clear").style.display="block";
-                        var device = {}
-                        device.ID = $(this).parents("tr").find(".id").html();
-                        device.Device = $(this).parents("tr").find(".device").html();
-                        device.Status = $(this).parents("tr").find(".status").html();
-
-                        $("#ID").val(device.ID);
-                        $("#Device").val(device.Device);
-                        $("#Status").val(device.Status);
-                        
+                        var Power = {}
+                        Power.ID = $(this).parents("tr").find(".id").html();
+                        Power.MPower = $(this).parents("tr").find(".device").html();
+                        Power.Status = $(this).parents("tr").find(".status").html();
+                        $("#ID").val(Power.ID);
+                        $("#PowerSource").val(device.Mpower);
+                        $("#Status").val(device.Status);  
                     }
                 });
             });
@@ -274,8 +265,8 @@
                             success: function (result) {
                                 console.log("IT WORKED");
                                 console.log("i = " + i);
-                                var device = result[i];
-                                console.log("device here " + device.ID);
+                                var Power = result[i];
+                                console.log("device here " + Power.ID);
                                 console.log(result);
                                 removeUser(result, i);
                             },
@@ -294,26 +285,13 @@
             });
 
             $(".buttonMon").click(function () {
-                var MainP ={
-                 MPower: document.getElementsByClassName("powersource")[0].innerHTML,
-                 Status: "On", 
-                };
-                 console.log(MainP);
-                 $.ajax({
-                    url: "/energy/createme",
-                    method: "POST",
-                    data: MainP,
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
+                var Power ={
+                  MPower: document.getElementsByClassName("powersource")[0].innerHTML,
+                  Status: "On", 
+                 };
+                  console.log(Power);
                 $.ajax({
-                    url: "/energy/updateMon",
+                    url: "/energy/updatemon",
                     method: "POST",
                     data: "",
                     dataType: "HTML",
@@ -327,26 +305,13 @@
                 });
             });
             $(".buttonMoff").click(function () {
-                var MainP ={
-                 MPower: document.getElementsByClassName("powersource")[0].innerHTML,
-                 Status: "Off", 
-                };
-                 console.log(MainP);
-                 $.ajax({
-                    url: "/energy/createmain",
-                    method: "POST",
-                    data: MainP,
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
+                 var Power ={
+                  MPower: document.getElementsByClassName("powersource")[0].innerHTML,
+                  Status: "Off", 
+                 };
+                  console.log(Power);
                 $.ajax({
-                    url: "/energy/updateMoff",
+                    url: "/energy/updatemoff",
                     method: "POST",
                     data: "",
                     dataType: "HTML",
@@ -361,27 +326,9 @@
             });
 
             $(".buttonSon").click(function () {
-                var SolarP ={
-                 Spower: document.getElementsByClassName("powersource")[1].innerHTML,
-                 Status: "On",  
-                };
-                 console.log(SolarP);
-                 $.ajax({
-                    url: "/energy/createsolar",
-                    method: "POST",
-                    data: SolarP,
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
                 console.log("Starting update")
                 $.ajax({
-                    url: "/energy/updateSon",
+                    url: "/energy/updateson",
                     method: "POST",
                     data: "",
                     dataType: "HTML",
@@ -395,26 +342,8 @@
                 });
             });
             $(".buttonSoff").click(function () {
-                var SolarP ={
-                 Spower: document.getElementsByClassName("powersource")[1].innerHTML,
-                 Status: "Off",  
-                };
-                 console.log(SolarP);
-                 $.ajax({
-                    url: "/energy/createme",
-                    method: "POST",
-                    data: SolarP,
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
                 $.ajax({
-                    url: "/energy/updateSoff",
+                    url: "/energy/updatesoff",
                     method: "POST",
                     data: "",
                     dataType: "HTML",
@@ -428,19 +357,18 @@
                 });
             });
 
-            function removeUser(devices, i) {
+            function removeUser(energys, i) {
                 var table = document.getElementById("Device_table");
                 var num = i;
                 console.log("num = " + num);
 
-                var len = devices.length;
+                var len = energys.length;
                 console.log("function call");
-                var device = devices[i];
-
+                var Power = devices[i];
                 $.ajax({
                     url: "/energy/delete",
                     method: "POST",
-                    data: device,
+                    data: Power,
                     dataType: "HTML",
                     success: function (result) {
                         console.log(result);

@@ -33,7 +33,7 @@ heatingdao = {
             });
         });
     },
-    insert: function (user, callback) {
+    insert: function (heatingup, callback) {
         var con = getConnection();
         con.connect(function (err) {
             if (err) throw err;

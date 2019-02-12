@@ -28,14 +28,14 @@ router.get('/findbyid/:id', function(req,res,next){
     })
 });
 router.post('/createsolar', function(req,res,next){
-    const SolarP = req.body;
-    daoenergy.insert(SolarP, function(result){
+    const Power = req.body;
+    daoenergy.insert(Power, function(result){
         res.send("done");
     })
 });
-router.post('/createmain', function(req,res,next){
-    const MainP = req.body;
-    daoenergy.insert1(MainP, function(result){
+router.post('/createpower', function(req,res,next){
+    const Power = req.body;
+    daoenergy.insert1(Power, function(result){
         res.send("done");
     })
 });
@@ -57,32 +57,32 @@ router.post('/login', function(req,res,next){
 });
 
 router.post('/delete', function(req,res,next){
-    const MainP = req.body;
-    daoenergy.delete(MainP.ID, function(result){
+    const Power = req.body;
+    daoenergy.delete(Power.ID, function(result){
         res.send("done");
     })
 });
-router.post('/updateMon', function(req,res,next){
-    const MainP = req.body;
-    daoenergy.update(MainP, function(result){
+router.post('/updatemon', function(req,res,next){
+    const Power = req.body;
+    daoenergy.update(Power, function(result){
         res.send("done");
     })
 });
-router.post('/updateMoff', function(req,res,next){
-    const MainP = req.body;
-    daoenergy.update1(MainP, function(result){
+router.post('/updatemoff', function(req,res,next){
+    const Power = req.body;
+    daoenergy.update1(Power, function(result){
         res.send("done");
     })
 });
-router.post('/updateSon', function(req,res,next){
-    const SolarP = req.body;
-    daoenergy.update2(SolarP, function(result){
+router.post('/updateson', function(req,res,next){
+    const Power = req.body;
+    daoenergy.update2(Power, function(result){
         res.send("done");
     })
 });
-router.post('/updateSoff', function(req,res,next){
-    const SolarP = req.body;
-    daoenergy.update3(SolarP, function(result){
+router.post('/updatesoff', function(req,res,next){
+    const Power = req.body;
+    daoenergy.update3(Power, function(result){
         res.send("done");
     })
 });

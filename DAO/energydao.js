@@ -36,23 +36,23 @@ var energydao={
             });
         });
     },
-    insert:function(SolarP,callback){
+    insert:function(Power,callback){
         var con = getConnection();
         con.connect(function (err) {
             if (err) throw err;
-            var data = [SolarP.SPower , SolarP.Status];
-            con.query(devicedao.sqlInsert,data, function (err, result) {
+            var data = [Power.MPower , Power.Status];
+            con.query(energydao.sqlInsert,data, function (err, result) {
                 handleErrorandLog(err,"Insert",result);
                 if(callback)callback(result);
             });
         });
     },
 
-    insert1:function(MainP,callback){
+    insert1:function(Power,callback){
         var con = getConnection();
         con.connect(function (err) {
             if (err) throw err;
-            var data = [MainP.MPower, MainP.Status];
+            var data = [Power.MPower, Power.Status];
             con.query(energydao.sqlInsertAi,data, function (err, result) {
                 handleErrorandLog(err,"Insert",result);
                 if(callback)callback(result);
@@ -65,7 +65,7 @@ var energydao={
         con.connect(function (err) {
             if (err) throw err;
             var data = [];
-            con.query(energydao.sqlUpdateTon,data, function (err, result) {
+            con.query(energydao.sqlUpdateMon,data, function (err, result) {
                 handleErrorandLog(err,"Update",result);
             });
         });
@@ -75,7 +75,7 @@ var energydao={
         con.connect(function (err) {
             if (err) throw err;
             var data = [];
-            con.query(energydao.sqlUpdateToff,data, function (err, result) {
+            con.query(energydao.sqlUpdateMoff,data, function (err, result) {
                 handleErrorandLog(err,"Update",result);
             });
         });
@@ -85,7 +85,7 @@ var energydao={
         con.connect(function (err) {
             if (err) throw err;
             var data = [];
-            con.query(devicedao.sqlUpdateLon,data, function (err, result) {
+            con.query(energydao.sqlUpdateSon,data, function (err, result) {
                 handleErrorandLog(err,"Update",result);
             });
         });
@@ -95,7 +95,7 @@ var energydao={
         con.connect(function (err) {
             if (err) throw err;
             var data = [];
-            con.query(energydao.sqlUpdateLoff,data, function (err, result) {
+            con.query(energydao.sqlUpdateSoff,data, function (err, result) {
                 handleErrorandLog(err,"Update",result);
             });
         });

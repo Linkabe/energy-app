@@ -126,7 +126,7 @@
                         <button type="submit" formmethod="post" formaction="/tv/off" class="buttontoff">Off</button>
                         </form><br><br><br>
             
-
+<div><button type="button" class="create-row">Create Device</button></div>
 <div><button type="button" class="delete-row">Delete Row</button></div>
 <div><button type="button" class="edit-row">Edit Row</button></div>
 </body>
@@ -229,6 +229,11 @@
                     $("table tbody").append(markup);
                 }
             }
+            $(".create-row").click(function() {
+                        document.getElementById("inputForm").style.display="block";
+                        document.getElementById("createdevice").style.display="block";
+                        document.getElementById("Clear").style.display="block";
+            });
 
 
             $(".edit-row").click(function() {
