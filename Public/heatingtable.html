@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Heating Tables</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <style type="text/css">
+        body, html {
+            height: 120%;
+            background-repeat: no-repeat;
+            background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+        }
+
+        .jumbotron {
+            margin-bottom: 0;
+        }
+
+        .centered-form{
+            margin-top: 60px;
+        }
+
+        .centered-form .panel{
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: rgba(0, 0, 0, 0.3) 20px 20px 20px;
+        }
+        table{
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td{
+            border: 1px solid #cdcdcd;
+        }
+        table th, table td{
+            padding: 10px;
+            text-align: left;
+        }
+
+        div{
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1>Heating Tables</h1>
+        <p>Displaying All Your Heating Needs</p>
+    </div>
+</div>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+        <form style="text-align: center">
+            <a href="/login.html"><input type="button" class="log-out" value="Log Out" style="color: black"></a>
+        </form>
+    </div>
+</nav>
+<br>
+<div>
+                    <!-- <form action="/heating/on" method="post"> -->
+                    <button type="submit" class="button">Heating is On </button>
+
+                    <button type="submit" formmethod="post" formaction="/heating/off" class="button button3">Heating is Off</button>
+                    </form>
+</div>
+
+<table class="Heating_table" id="Heating_table">
+    <thead>
+    <tr>
+        <th>Select</th>
+        <th>House Temperature</th>
+        <th>Humidity</th>
+        <th>Status</th>
+        <th>Time Stamp</th>
+    </tr>
+    </thead>
+    <tbody>
+                
+    </tbody>
+</table>
+
+<div>
+        <form action="/heating/on" method="post">
+        <button type="submit" class="buttonhon">Heating is On </button>
+        <button type="submit" formmethod="post" formaction="/heating/off" class="buttonhoff">Heating is Off</button>
+        </form>
+</div>
+<div><button type="button" class="delete-row">Delete Row</button></div>
+<br>
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(function () {
+            $.ajax({
+                url: "/heating/",
+                method: "GET",
+                data: "",
+                dataType: "JSON",
+                success: function (result) {
+                    console.log(result);
+                    populateTable(result);
+                    console.log("lenght");
+                    console.log(result.length);
+                },
+                error: function (xhr, status, error) {
+                    console.log("error: " + error);
+                }
+            });
+
+            $(".delete-row").click(function () {
+                var i = 0;
+                $("table tbody").find('input[name="record"]').each(function () {
+                    console.log(i);
+                    if ($(this).is(":checked")) {
+                        console.log($(this));
+                        var result;
+                        $.ajax({
+                            url: "/heating/",
+                            method: "GET",
+                            data: "",
+                            dataType: "JSON",
+                            success: function (result) {
+                                console.log("IT WORKED");
+                                console.log("i = " + i);
+                                var user = result[i];
+                                console.log("heating here " + ID);
+                                console.log(result);
+                                removeUser(result, i);
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("error: " + error);
+                            }
+                        });
+
+                        $(this).parents("tr").remove();
+                    }
+                    else {
+                        i++;
+                    }
+                });
+
+            });
+
+            function populateTable(heating) {
+                var table = document.getElementById("Heating_table");
+                var len = heating.length;
+
+                for (var i = 0; i < len; i++) {
+                    var user = heating[i];
+                    var markup = "<tr><td><input type='checkbox' name='record'></td><td id='House_Temp' class='HouseTemp'>" + user.HouseTemp + "</td><td id='Humid_ity' class='Humidity'>" + user.Humidity + "</td><td id='Status' class='status'>" + user.Status + "</td><td id='date1' class='Date'>" + user.Date + "</td></tr>";
+                    $("table tbody").append(markup);
+                }
+            }
+
+            $(".buttonhon").click(function () {
+                var heatingup ={
+                 Housetemp: document.getElementsByClassName("HouseTemp")[1].innerHTML,
+                 humidity: document.getElementsByClassName("Humidity")[1].innerHTML,
+                 Status: "Off",  
+                };
+                 console.log(heatingup);
+                 console.log("this is here");
+                var markup = "<tr><td><input type='checkbox' name='record'><td id='House_Temp' class='HouseTemp'>" + user.HouseTemp + "</td><td id='Humid_ity' class='Humidity'>" + user.Humidity + "</td><td id='Status' class='status'>" + user.Status + "</td><td id='date1' class='Date'>" + user.Date + "</td></tr>";
+                $("table tbody").append(markup);
+                 $.ajax({
+                    url: "/heating/createme",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+                $.ajax({
+                    url: "/heating/updatehon",
+                    method: "POST",
+                    data: "",
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+            $(".buttonhoff").click(function () {
+                var heatingup ={
+                 House_Temp: document.getElementsByClassName("HouseTemp")[1].innerHTML,
+                 Humid_ity: document.getElementsByClassName("Humidity")[1].innerHTML,
+                 Status: "On",  
+                };
+                 console.log(heatingup);
+                 $.ajax({
+                    url: "/heating/createme",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+                $.ajax({
+                    url: "/heating/updatehoff",
+                    method: "POST",
+                    data: "",
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+
+
+            function removeUser(students, i) {
+                var table = document.getElementById("Heating_table");
+                var num = i;
+                console.log("num = " + num);
+
+                var len = students.length;
+                console.log("function call");
+                var user = students[i];
+
+                $.ajax({
+                    url: "/heating/delete",
+                    method: "POST",
+                    data: user,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            }
+        })
+    });
+
+
+</script>
+</html>

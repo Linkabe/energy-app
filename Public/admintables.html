@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create User Form</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <style type="text/css">
+        body, html {
+            height: 120%;
+            background-repeat: no-repeat;
+            background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+        }
+
+        .jumbotron {
+            margin-bottom: 0;
+        }
+
+        .centered-form{
+            margin-top: 60px;
+        }
+
+        .centered-form .panel{
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: rgba(0, 0, 0, 0.3) 20px 20px 20px;
+        }
+        table{
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td{
+            border: 1px solid #cdcdcd;
+        }
+        table th, table td{
+            padding: 10px;
+            text-align: left;
+        }
+
+        div{
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1>Administration Tables</h1>
+        <p>Edit Account for the Text App</p>
+    </div>
+</div>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+    </div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <form style="text-align: center">
+        <a href="login.html"><input type="button" class="log-out" value="Log Out"></a>
+        <a href="thetextapp.html"><input type="button" class="thetextapp" value="The Text App"></a>
+    </form>
+</div>
+</nav>
+
+<div class="container">
+                <div class="row centered-form">
+                    <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div id="inputForm" style="display: none">
+                                    <div class="row">
+                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <div class="form-group">
+                                                <input type="number" id="User_ID" name="UserID" class="form-control input-sm" style="display: none">
+                                                <input type="text" name="F_name" id="Fname" class="form-control input-sm" placeholder="First Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <div class="form-group" style="text-align: right">
+                                                <input type="text" name="L_name" id="Lname" class="form-control input-sm" placeholder="Last Name">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <div class="form-group">
+                                                <input type="text" name="E_mail" id="Email" class="form-control input-sm" placeholder="Email Address">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <div class="form-group">
+                                                Date of Birth:  <input type="date" name="D_OB" id="DOB" class="form-control input-sm">
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                            <div class="form-group">
+                                                <input type="text" name="Username" id="UserN" class="form-control input-sm" placeholder="Username">
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                                <div class="form-group">
+                                                    <input type="password" name="Password" id="PassW" class="form-control input-sm" placeholder="Password">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                        <input type="button" id="createuser" value="Update Account" class="btn btn-info btn-block" style="display: none">
+                        <input type="button" id="Clear" value="Clear" class="btn btn-info btn-block" style="display: none">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table align='center' id="Admin_table">
+        <thead>
+        <tr>
+            <th>Select</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>DOB</th>
+            <th>Username</th>
+            <th> Password</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    </form>
+<div><button type="button" class="delete-row">Delete Row</button></div>
+<div><button type="button" class="edit-row">Edit Row</button></div>
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(function () {
+            $.ajax({
+                url: "/users/",
+                method: "GET",
+                data: "",
+                dataType: "JSON",
+                success: function (result) {
+                    console.log(result);
+                    populateTable(result);
+                    console.log("lenght");
+                    console.log(result.length);
+                },
+                error: function (xhr, status, error) {
+                    console.log("error: " + error);
+                }
+            });
+
+            $(".delete-row").click(function () {
+                var i = 0;
+                $("table tbody").find('input[name="record"]').each(function () {
+                    console.log(i);
+                    if ($(this).is(":checked")) {
+                        console.log($(this));
+                        var result;
+                        $.ajax({
+                            url: "/users/",
+                            method: "GET",
+                            data: "",
+                            dataType: "JSON",
+                            success: function (result) {
+                                console.log("IT WORKED");
+                                console.log("i = " + i);
+                                var user = result[i];
+                                console.log("user here " + user.User_ID);
+                                console.log(result);
+                                removeUser(result, i);
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("error: " + error);
+                            }
+                        });
+
+                        $(this).parents("tr").remove();
+                    }
+                    else {
+                        i++;
+                    }
+                });
+
+            });
+
+
+            $('#createuser').click(function () {
+                document.getElementById("inputForm").style.display="none";
+                document.getElementById("createuser").style.display="none";
+                document.getElementById("Clear").style.display="none";
+                var user = {
+                    userID: $("input[name='User_ID']").val(),
+                    fname: $("input[name='F_name']").val(),
+                    lname: $("input[name='L_name']").val(),
+                    email: $("input[name='E_mail']").val(),
+                    dob: $("input[name='D_OB']").val(),
+                    usern: $("input[name='Username']").val(),
+                    passw: $("input[name='Password']").val()
+                };
+                console.log(user);
+                console.log("this is here");
+                var markup = "<tr><td><input type='checkbox' name='record'></td><td class='F_name'>" + user.fname + "</td><td id= class='L_name'>" + user.lname + "</td><td class='E_mail'>" + user.email + "</td><td class='D_OB'>" + user.dob + "</td><td class='Username'>" + user.usern + "</td><td class='Password'>" + user.passw + "</td></tr>";
+                $("table tbody").append(markup);
+                $.ajax({
+                    url: "/users/create",
+                    method: "POST",
+                    data: user,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+
+            $(document).ready(function(){
+                $("#Clear").click(function(){
+                    /* Single line Reset function executes on click of Reset Button */
+                    $("#inputForm")[0].reset();
+                });});
+
+            function populateTable(students) {
+                var table = document.getElementById("Admin_table");
+                var len = students.length;
+
+                for (var i = 0; i < len; i++) {
+                    var user = students[i];
+                    var markup = "<tr><td><input type='checkbox' name='record'></td><td id='Fname' class='F_name'>" + user.F_name + "</td><td id='Lname' class='L_name'>" + user.L_name + "</td><td id='Email' class='E_mail'>" + user.E_mail + "</td><td id='DOB' class='D_OB'>" + user.D_OB + "</td><td id='UserN' class='Username'>" + user.Username + "</td><td id='PassW' class='Password'>" + user.Password + "</td></tr>";
+                    $("table tbody").append(markup);
+                }
+            }
+
+
+            $(".edit-row").click(function() {
+                $("table tbody").find('input[name="record"]').each(function () {
+                    if ($(this).is(":checked")) {
+                        document.getElementById("inputForm").style.display="block";
+                        document.getElementById("createuser").style.display="block";
+                        document.getElementById("Clear").style.display="block";
+                        var user = {}
+                        user.User_ID = $(this).parents("tr").find(".User_ID").html();
+                        user.F_name = $(this).parents("tr").find(".F_name").html();
+                        user.L_name = $(this).parents("tr").find(".L_name").html();
+                        user.E_mail = $(this).parents("tr").find(".E_mail").html();
+                        // user.D_OB = $(this).parents("tr").find(".D_OB").html();
+                        user.Username = $(this).parents("tr").find(".Username").html();
+                        user.Password = $(this).parents("tr").find(".Password").html();
+
+                        $("#UserID").val(user.User_ID);
+                        $("#Fname").val(user.F_name);
+                        $("#Lname").val(user.L_name);
+                        $("#Email").val(user.E_mail);
+                        //$("#DOB").val(user.D_OB);
+                        $("#UserN").val(user.Username);
+                        $("#PassW").val(user.Password);
+                    }
+                });
+            });
+
+            $(".edit-row").click(function () {
+                var i = 0;
+                $("table tbody").find('input[name="record"]').each(function () {
+                    console.log(i);
+                    if ($(this).is(":checked")) {
+                        console.log($(this));
+                        var result;
+                        $.ajax({
+                            url: "/users/",
+                            method: "GET",
+                            data: "",
+                            dataType: "JSON",
+                            success: function (result) {
+                                console.log("IT WORKED");
+                                console.log("i = " + i);
+                                var user = result[i];
+                                console.log("user here " + user.User_ID);
+                                console.log(result);
+                                removeUser(result, i);
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("error: " + error);
+                            }
+                        });
+
+                        $(this).parents("tr").remove();
+                    }
+                    else {
+                        i++;
+                    }
+                });
+
+            });
+
+            function removeUser(students, i) {
+                var table = document.getElementById("Admin_table");
+                var num = i;
+                console.log("num = " + num);
+
+                var len = students.length;
+                console.log("function call");
+                var user = students[i];
+
+                $.ajax({
+                    url: "/users/delete",
+                    method: "POST",
+                    data: user,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            }
+        })
+    });
+
+
+</script>
+</body>
+</html>

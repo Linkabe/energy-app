@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create User Form</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="table_script.js"></script>
+    <style type="text/css">
+        body, html {
+            height: 100%;
+            background-repeat: no-repeat;
+            background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+        }
+
+        .jumbotron {
+            margin-bottom: 0;
+        }
+
+        .centered-form{
+            margin-top: 60px;
+        }
+
+        .centered-form .panel{
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: rgba(0, 0, 0, 0.3) 20px 20px 20px;
+        }
+        table{
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td{
+            border: 1px solid #cdcdcd;
+        }
+        table th, table td{
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1>Account Creation</h1>
+        <p>Create Your Account To Login</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row centered-form">
+        <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Sign Up To Start Using <small>It's free!</small></h3>
+                </div>
+                <div class="panel-body">
+                    <form id="inputForm">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <input type="number" id="User_ID" name="UserID" class="form-control input-sm" style="display: none">
+                                    <input type="text" name="F_name" id="Fname" class="form-control input-sm" placeholder="First Name">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group" style="text-align: right">
+                                    <input type="text" name="L_name" id="Lname" class="form-control input-sm" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="E_mail" id="Email" class="form-control input-sm" placeholder="Email Address">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    Date of Birth:  <input type="date" name="D_OB" id="DOB" class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="Username" id="UserN" class="form-control input-sm" placeholder="Username">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <div class="form-group">
+                                        <input type="password" name="Password" id="PassW" class="form-control input-sm" placeholder="Password">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="button" id="createuser" onclick="add_row()" value="Create Account" class="btn btn-info btn-block" style="display: block">
+                        <input type="button" id="saveuser" value="Update Account" class="btn btn-info btn-block" style="display: none">
+                        <input type="button" id="Clear" value="Clear" class="btn btn-info btn-block">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="wrapper">
+    <table align='center' cellspacing=2 cellpadding=5 id="User_table" border=1>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>DOB</th>
+            <th>Username</th>
+            <th>Password</th>
+        </tr>
+
+        <tr id="UserID_row1">
+            <td id="Fname_row1">Niall</td>
+            <td id="Lname_row1">Quinn</td>
+            <td id="Email_row1">mymail@email.com</td>
+            <td id="DOB_row1">17-04-1987</td>
+            <td id="UserN_row1">Nquinn</td>
+            <td id="PassW_row1">quinn</td>
+            <td>
+                <input type="button" id="edit_button1" value="Edit" class="edit" onclick="edit_row('1')">
+                <input style="display: none" type="button" id="save_button1" value="Save" class="save" onclick="save_row('1')">
+                <input type="button" value="Delete" class="delete" onclick="delete_row('1')">
+            </td>
+        </tr>
+
+        <tr>
+            <td><input type="text" id="new_UserID"></td>
+            <td><input type="text" id="new_Fname"></td>
+            <td><input type="text" id="new_Lname"></td>
+            <td><input type="text" id="new_Email"></td>
+            <td><input type="text" id="new_DOB"></td>
+            <td><input type="text" id="new_UserN"></td>
+            <td><input type="text" id="new_PassW"></td>
+        </tr>
+
+    </table>
+</div>
+<script>
+    function edit_row(no)
+    {
+        document.getElementById("edit_button"+no).style.display="none";
+        document.getElementById("save_button"+no).style.display="block";
+
+        var Fname=document.getElementById("Fname_row"+no);
+        var Lname=document.getElementById("Lname_row"+no);
+        var Email=document.getElementById("Email_row"+no);
+        var DOB=document.getElementById("DOB_row"+no);
+        var UserN=document.getElementById("UserN_row"+no);
+        var PassW=document.getElementById("PassW_row"+no);
+
+        var Fname_data=Fname.innerHTML;
+        var Lname_data=Lname.innerHTML;
+        var Email_data=Email.innerHTML;
+        var DOB_data=DOB.innerHTML;
+        var UserN_data=UserN.innerHTML;
+        var PassW_data=PassW.innerHTML;
+
+        Fname.innerHTML="<input type='text' id='Fname_text"+no+"' value='"+Fname_data+"'>";
+        Lname.innerHTML="<input type='text' id='Lname_text"+no+"' value='"+Lname_data+"'>";
+        Email.innerHTML="<input type='text' id='Email_text"+no+"' value='"+Email_data+"'>";
+        DOB.innerHTML="<input type='date' id='DOB_text"+no+"' value='"+DOB_data+"'>";
+        UserN.innerHTML="<input type='text' id='UserN_text"+no+"' value='"+UserN_data+"'>";
+        PassW.innerHTML="<input type='text' id='PassW_text"+no+"' value='"+PassW_data+"'>";
+    }
+
+    function save_row(no)
+    {
+        var Fname_val=document.getElementById("Fname_text"+no).value;
+        var Lname_val=document.getElementById("Lname_text"+no).value;
+        var Email_val=document.getElementById("Email_text"+no).value;
+        var DOB_val=document.getElementById("DOB_text"+no).value;
+        var UserN_val=document.getElementById("UserN_text"+no).value;
+        var PassW_val=document.getElementById("PassW_text"+no).value;
+
+        document.getElementById("Fname_row"+no).innerHTML=Fname_val;
+        document.getElementById("Lname_row"+no).innerHTML=Lname_val;
+        document.getElementById("Email_row"+no).innerHTML=Email_val;
+        document.getElementById("DOB_row"+no).innerHTML=DOB_val;
+        document.getElementById("UserN_row"+no).innerHTML=UserN_val;
+        document.getElementById("PassW_row"+no).innerHTML=PassW_val;
+
+        document.getElementById("edit_button"+no).style.display="block";
+        document.getElementById("save_button"+no).style.display="none";
+    }
+
+    function delete_row(no)
+    {
+        document.getElementById("UserID_row"+no+"").outerHTML="";
+    }
+
+    function add_row()
+    {
+        var new_Fname=document.getElementById("new__Fname").value;
+        var new_Lname=document.getElementById("new__Lname").value;
+        var new_Email=document.getElementById("new__Email").value;
+        var new_DOB=document.getElementById("new_DOB").value;
+        var new_UserN=document.getElementById("new_UserN").value;
+        var new_PassW=document.getElementById("new_PassW").value;
+
+        var table=document.getElementById("User_table");
+        var table_len=(table.rows.length)-1;
+        var row = table.insertRow(table_len).outerHTML="<tr id='UserID_row"+table_len+"'><td id='Fname_row"+table_len+"'>"+new_Fname+"</td><td id='Lname_row"+table_len+"'>"+new_Lname+"</td><td id='Email_row"+table_len+"'>"+new_Email+"</td><td id='DOB_row"+table_len+"'>"+new_DOB+"</td><td id='UserN_row"+table_len+"'>"+new_UserN+"</td><td id='PassW_row"+table_len+"'>"+new_PassW+"</td><td><input type='button' id='edit_button"+table_len+"' value='Edit' class='edit' onclick='edit_row("+table_len+")'> <input style='display: none' type='button' id='save_button"+table_len+"' value='Save' class='save' onclick='save_row("+table_len+")'> <input type='button' value='Delete' class='delete' onclick='delete_row("+table_len+")'></td></tr>";
+
+        document.getElementById("new_name").value="";
+        document.getElementById("new__Fname").value="";
+        document.getElementById("new__Lname").value="";
+        document.getElementById("new__Email").value="";
+        document.getElementById("new_DOB").value="";
+        document.getElementById("new_UserN").value="";
+        document.getElementById("new_PassW").value="";
+    }
+</script>
+</body>
+</html>

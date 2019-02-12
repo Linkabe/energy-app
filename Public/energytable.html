@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Energy Tables</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <style type="text/css">
+        body, html {
+            height: 120%;
+            background-repeat: no-repeat;
+            background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+        }
+
+        .jumbotron {
+            margin-bottom: 0;
+        }
+
+        .centered-form{
+            margin-top: 60px;
+        }
+
+        .centered-form .panel{
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: rgba(0, 0, 0, 0.3) 20px 20px 20px;
+        }
+        table{
+            width: 80%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td{
+            border: 1px solid #cdcdcd;
+        }
+        table th, table td{
+            padding: 10px;
+            text-align: left;
+        }
+
+        div{
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1>Energy Tables</h1>
+        <p>Displaying All Your Energy Requirements</p>
+    </div>
+</div>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+        <form style="text-align: center">
+            <a href="login.html"><input type="button" class="log-out" value="Log Out" style="color: black"></a>
+            <a href="welcome.html"><input type="button" class="welcome" value="Back" style="color: black"></a>
+        </form>
+    </div>
+</nav>
+
+
+<div class="container">
+    <div class="row centered-form">
+        <div class="col-xs-12 col-sm-8 col-md-4 col-sm-offset-2 col-md-offset-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="inputForm" style="display: none">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <input type="number" id="ID" name="id" class="form-control input-sm" style="display: none">
+                                    <input type="text" name="HouseTemp" id="House_Temp" class="form-control input-sm" placeholder="House Temp">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group" style="text-align: right">
+                                    <input type="text" name="Power" id="Power_Usg" class="form-control input-sm" placeholder="Power Usage">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <input type="text" name="TherrmostatStats" id="Thermo_Stat" class="form-control input-sm" placeholder="Thermostat Status">
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    Date of Birth:  <input type="date" name="Date" id="date1" class="form-control input-sm">
+                                </div>
+                            </div>
+
+                            <input type="button" id="createuser" value="Update Account" class="btn btn-info btn-block" style="display: none">
+                            <input type="button" id="Clear" value="Clear" class="btn btn-info btn-block" style="display: none">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="Energy_table" id="Energy_table">
+    <thead>
+    <tr>
+        <th>Select</th>
+        <th>Energy Source</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>                  
+    </tbody>       
+</table>
+<h4>&nbsp;&nbsp;Options</h4>
+                        <form action="/mainpower/on" method="post">&nbsp;
+                        <button type="submit" class="buttonlon">On</button>
+                        <button type="submit" formmethod="post" formaction="/mainpower/off" class="buttonloff">Off</button>
+                        </form>
+                        <br>
+
+                        <br><form action="/solarpower/on" method="post">&nbsp;
+                        <button type="submit" class="buttonton">On</button>
+                        <button type="submit" formmethod="post" formaction="/solarpower/off" class="buttontoff">Off</button>
+                        </form><br><br><br>
+            
+
+<div><button type="button" class="delete-row">Delete Row</button></div>
+<div><button type="button" class="edit-row">Edit Row</button></div>
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(function () {
+            $.ajax({
+                url: "/energy/",
+                method: "GET",
+                data: "",
+                dataType: "JSON",
+                success: function (result) {
+                    console.log(result);
+                    populateTable(result);
+                    console.log("lenght");
+                    console.log(result.length);
+                },
+                error: function (xhr, status, error) {
+                    console.log("error: " + error);
+                }
+            });
+
+            $(".delete-row").click(function () {
+                var i = 0;
+                $("table tbody").find('input[name="record"]').each(function () {
+                    console.log(i);
+                    if ($(this).is(":checked")) {
+                        console.log($(this));
+                        var result;
+                        $.ajax({
+                            url: "/energy/",
+                            method: "GET",
+                            data: "",
+                            dataType: "JSON",
+                            success: function (result) {
+                                console.log("IT WORKED");
+                                console.log("i = " + i);
+                                var device = result[i];
+                                console.log("device here " + ID);
+                                console.log(result);
+                                removeUser(result, i);
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("error: " + error);
+                            }
+                        });
+
+                        $(this).parents("tr").remove();
+                    }
+                    else {
+                        i++;
+                    }
+                });
+
+            });
+
+
+            $('#createdevice').click(function () {
+                document.getElementById("inputForm").style.display="none";
+                document.getElementById("createdevice").style.display="none";
+                document.getElementById("Clear").style.display="none";
+                var energy = {
+                    id: $("input[name='ID']").val(),
+                    MainPower: $("input[name='mainpower']").val(),
+                    Status: $("input[name='status']").val(),
+                };
+                console.log(device);
+                console.log("this is here");
+                var markup = "<tr><td><input type='checkbox' name='record'></td><td id='MainPower' class='mainpower'>" + energy.MainPower + "</td><td id='Status' class='status'>" + energy.Status + "</td></tr>";
+                $("table tbody").append(markup);
+                $.ajax({
+                    url: "/energy/createdevice",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+
+            $(document).ready(function(){
+                $("#Clear").click(function(){
+                    /* Single line Reset function executes on click of Reset Button */
+                    $("#inputForm")[0].reset();
+                });});
+
+            function populateTable(energy) {
+                var table = document.getElementById("Energy_table");
+                var len = energys.length;
+
+                for (var i = 0; i < len; i++) {
+                    var energy = energys[i];
+                    var markup = "<tr><td><input type='checkbox' name='record'></td><td id='PowerSource' class='powersource'>" + energy.PowerSource + "</td><td id='Status' class='status'>" + energy.Status + "</td><td id='PowerSource' class='powersource'>" + energy.PowerSource + "</td><td id='Date1' class='date1'>" + energy.TimeStamp + "</td></tr>";
+                    $("table tbody").append(markup);
+                }
+            }
+
+
+            $(".edit-row").click(function() {
+                $("table tbody").find('input[name="record"]').each(function () {
+                    if ($(this).is(":checked")) {
+                        document.getElementById("inputForm").style.display="block";
+                        document.getElementById("createdevice").style.display="block";
+                        document.getElementById("Clear").style.display="block";
+                        var device = {}
+                        device.ID = $(this).parents("tr").find(".id").html();
+                        device.Device = $(this).parents("tr").find(".device").html();
+                        device.Status = $(this).parents("tr").find(".status").html();
+
+                        $("#ID").val(device.ID);
+                        $("#Device").val(device.Device);
+                        $("#Status").val(device.Status);
+                        
+                    }
+                });
+            });
+
+            $(".edit-row").click(function () {
+                var i = 0;
+                $("table tbody").find('input[name="record"]').each(function () {
+                    console.log(i);
+                    if ($(this).is(":checked")) {
+                        console.log($(this));
+                        var result;
+                        $.ajax({
+                            url: "/energy/",
+                            method: "GET",
+                            data: "",
+                            dataType: "JSON",
+                            success: function (result) {
+                                console.log("IT WORKED");
+                                console.log("i = " + i);
+                                var device = result[i];
+                                console.log("device here " + device.ID);
+                                console.log(result);
+                                removeUser(result, i);
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("error: " + error);
+                            }
+                        });
+
+                        $(this).parents("tr").remove();
+                    }
+                    else {
+                        i++;
+                    }
+                });
+
+            });
+
+            $(".buttonton").click(function () {
+                var device ={
+                 Device: document.getElementsByClassName("device")[2].innerHTML,
+                 Status: "On", 
+                };
+                 console.log(device);
+                 $.ajax({
+                    url: "/energy/createme",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+                $.ajax({
+                    url: "/energy/updateton",
+                    method: "POST",
+                    data: "",
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+            $(".buttontoff").click(function () {
+                var device ={
+                 Device: document.getElementsByClassName("device")[2].innerHTML,
+                 Status: "Off",  
+                };
+                 console.log(device);
+                 $.ajax({
+                    url: "/energy/createme",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+                $.ajax({
+                    url: "/energy/updatetoff",
+                    method: "POST",
+                    data: "",
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+
+            $(".buttonlon").click(function () {
+                var device ={
+                 Device: document.getElementsByClassName("device")[0].innerHTML,
+                 Status: "On",  
+                };
+                 console.log(device);
+                 $.ajax({
+                    url: "/energy/createme",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+                console.log("Starting update")
+                $.ajax({
+                    url: "/energy/updatelon",
+                    method: "POST",
+                    data: "",
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+            $(".buttonloff").click(function () {
+                var device ={
+                 Device: document.getElementsByClassName("device")[0].innerHTML,
+                 Status: "Off",  
+                };
+                 console.log(device);
+                 $.ajax({
+                    url: "/energy/createme",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+                $.ajax({
+                    url: "/energy/updateloff",
+                    method: "POST",
+                    data: "",
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+            $(".buttonhon").click(function () {
+                var device ={
+                 Device: document.getElementsByClassName("device")[1].innerHTML,
+                 Status: "On",  
+                };
+                 console.log(device);
+                 $.ajax({
+                    url: "/energy/createme",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+                $.ajax({
+                    url: "/energy/updatehon",
+                    method: "POST",
+                    data: "",
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+            $(".buttonhoff").click(function () {
+                var device ={
+                 Device: document.getElementsByClassName("device")[1].innerHTML,
+                 Status: "Off",  
+                };
+                 console.log(device);
+                 $.ajax({
+                    url: "/energy/createme",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+                $.ajax({
+                    url: "/energy/updatehoff",
+                    method: "POST",
+                    data: "",
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            });
+
+            function removeUser(devices, i) {
+                var table = document.getElementById("Device_table");
+                var num = i;
+                console.log("num = " + num);
+
+                var len = devices.length;
+                console.log("function call");
+                var device = devices[i];
+
+                $.ajax({
+                    url: "/energy/delete",
+                    method: "POST",
+                    data: device,
+                    dataType: "HTML",
+                    success: function (result) {
+                        console.log(result);
+                        $('#response').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error: " + error);
+                    }
+                });
+            }
+        })
+    });
+
+
+
+
+</script>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <style type="text/css">
+        body, html {
+            height: 100%;
+            background-repeat: no-repeat;
+            background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+        }
+
+        /* Remove the jumbotron's default bottom margin */
+        .jumbotron {
+            margin-bottom: 0;
+        }
+
+        div {
+            text-align: center;
+        }
+        form{
+            margin: 20px 0;
+        }
+        form input, button{
+            padding: 5px;
+        }
+        table{
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        table, th, td{
+            border: 1px solid #cdcdcd;
+        }
+        table th, table td{
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1>Text App</h1>
+        <p>Table of User and Text Sent</p>
+    </div>
+</div>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <form style="text-align: center">
+                <a href="login.html"><input type="button" class="log-out" value="Log Out"></a>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<form id="myForm" style="text-align: center">
+    <input type="number" id="myNumber" name="ID" style="display: none">
+    <input type="text" name="Username" placeholder="Username"><br><br>
+    <textarea rows="4" cols="50" name="Sent_text">
+Enter text here...</textarea><br>
+    <input type="button" id="send-text" value="Send Text">
+    <input type="button" id="clear" value="Clear">
+</form>
+
+
+<table align='center' id="Text_table">
+    <thead>
+    <tr>
+        <th>Select</th>
+        <th>Username</th>
+        <th>Time Stamp</th>
+        <th>Text Sent</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div>
+    <button type="button" class="delete-row">Delete Row</button>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(function () {
+            $.ajax({
+                url: "/textapp/getall",
+                method: "GET",
+                data: "",
+                dataType: "JSON",
+                success: function (result) {
+                    console.log(result);
+                    populateTable(result);
+                    console.log("lenght");
+                    console.log(result.length);
+                },
+                error: function (xhr, status, error) {
+                    console.log("error: " + error);
+                }
+            });
+
+            $(".delete-row").click(function(){
+                var i = 0;
+
+                $("table tbody").find('input[name="record"]').each(function(){
+                    console.log(i)
+                    if($(this).is(":checked")){
+                        console.log($(this));
+                        var result;
+                        $.ajax({
+                            url:"/textapp/getall",
+                            method:"GET",
+                            data:"",
+                            dataType:"JSON",
+                            success:function(result){
+                                console.log("IT WORKED");
+                                console.log("i = " + i);
+                                var userT = result[i];
+                                console.log("student here " + userT.ID);
+                                console.log(result);
+                                removeUser(result, i);
+                            },
+                            error:function(xhr,status,error){
+                                console.log("error: "+error);
+                            }
+                        });
+
+                        $(this).parents("tr").remove();
+                    }
+                    else{
+                        i++;
+                    }
+                });
+
+            });
+
+            $(document).ready(function () {
+                $(function () {
+                    $('#send-text').click(function () {
+                        var userT = {
+                            id: $("input[name='ID']").val(),
+                            usern: $("input[name='Username']").val(),
+                            texts: $("textarea[name='Sent_text']").val()
+                        };
+
+                        var now = new Date(Date.now());
+                        var markup = "<tr><td><input type='checkbox' name='record'></td><td name='Username'>" + userT.usern + "</td><td name='time_stamp'>" + now + "</td><td name='Sent_Text'>" + userT.texts + "</td></tr>";
+                        $("table tbody").append(markup);
+
+                        $.ajax({
+                            url: "/textapp/create",
+                            method: "POST",
+                            data: userT,
+                            dataType: "HTML",
+                            success: function (result) {
+                                console.log(result);
+                                $('#response').html(result);
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("error: " + error);
+                            }
+                        });
+                    });
+                });
+            });
+
+
+            $(document).ready(function(){
+                $("#clear").click(function(){
+                    /* Single line Reset function executes on click of Reset Button */
+                    $("#myForm")[0].reset();
+                });});
+
+            function populateTable(students) {
+                var table = document.getElementById("Text_table");
+                var len = students.length;
+                for (var i = 0; i < len; i++) {
+                    var user = students[i];
+                    var now = new Date(Date.now());
+                    var markup = "<tr><td><input type='checkbox' name='record'></td><td class='Username'>" + user.Username + "</td><td class='Time_Stamp'>" + user.Time_Stamp + "</td><td class='Sent_Text'>" + user.Sent_text + "</td></tr>";
+                    $("table tbody").append(markup);
+                }
+            }
+        })
+    });
+
+    function myIncrament() {
+        document.getElementById("myNumber").stepUp(2);
+    }
+
+    function removeUser(students, i){
+        var table = document.getElementById("Text_table");
+        var num = i;
+        console.log("num = " + num);
+
+        var len = students.length;
+        console.log("function call");
+        var userT = students[i];
+        console.log(userT);
+        console.log(userT.ID);
+
+        $.ajax({
+            url: "/textapp/delete",
+            method: "POST",
+            data: userT,
+            dataType: "HTML",
+            success: function (result) {
+                console.log(result);
+                $('#response').html(result);
+            },
+            error: function (xhr, status, error) {
+                console.log("error: " + error);
+            }
+        });
+    }
+
+
+</script>
+
+<footer class="container-fluid text-center">
+    <p>The Text App</p>
+</footer>
+
+</body>
+</html>
