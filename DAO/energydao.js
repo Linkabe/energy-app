@@ -5,12 +5,10 @@ var energydao={
     sqlFindById: "select * from energy_tbl where ID = ?;",
     sqlInsert: "insert into energy_tbl (PowerSource, Status) values (?,?);",
     sqlInsertAi: "insert into ai_tbl (PowerSource, Status) values (?,?);",
-    sqlUpdateLon: "update energy_tbl set Status = 'On' where ID = 1;",
-    sqlUpdateLoff: "update energy_tbl set Status = 'Off' where ID = 1;",
-    sqlUpdateHon: "update energy_tbl set Status = 'On' where ID = 2;",
-    sqlUpdateHoff: "update energy_tbl set Status = 'Off' where ID = 2;",
-    sqlUpdateTon: "update energy_tbl set Status = 'On' where ID = 3;",
-    sqlUpdateToff: "update energy_tbl set Status = 'Off' where ID = 3;",
+    sqlUpdateMon: "update energy_tbl set Status = 'On' where ID = 3;",
+    sqlUpdateMoff: "update energy_tbl set Status = 'Off' where ID = 3;",
+    sqlUpdateSon: "update energy_tbl set Status = 'On' where ID = 4;",
+    sqlUpdateSoff: "update energy_tbl set Status = 'Off' where ID = 4;",
     sqlDelete: "delete from energy_tbl where ID =?;",
     sqlfindme: "select * from energy_tbl where usern = ? and passw  = ?;",
     // note that these methods are all the same except the sql and the data
@@ -38,11 +36,11 @@ var energydao={
             });
         });
     },
-    insert:function(device,callback){
+    insert:function(SolarP,callback){
         var con = getConnection();
         con.connect(function (err) {
             if (err) throw err;
-            var data = [device.Device , device.Status];
+            var data = [SolarP.SPower , SolarP.Status];
             con.query(devicedao.sqlInsert,data, function (err, result) {
                 handleErrorandLog(err,"Insert",result);
                 if(callback)callback(result);
@@ -50,11 +48,11 @@ var energydao={
         });
     },
 
-    insert1:function(device,callback){
+    insert1:function(MainP,callback){
         var con = getConnection();
         con.connect(function (err) {
             if (err) throw err;
-            var data = [device.Device, device.Status];
+            var data = [MainP.MPower, MainP.Status];
             con.query(energydao.sqlInsertAi,data, function (err, result) {
                 handleErrorandLog(err,"Insert",result);
                 if(callback)callback(result);

@@ -27,15 +27,15 @@ router.get('/findbyid/:id', function(req,res,next){
         res.send(result[0]);
     })
 });
-router.post('/createdevice', function(req,res,next){
-    const device = req.body;
-    daoenergy.insert(device, function(result){
+router.post('/createsolar', function(req,res,next){
+    const SolarP = req.body;
+    daoenergy.insert(SolarP, function(result){
         res.send("done");
     })
 });
-router.post('/createme', function(req,res,next){
-    const device = req.body;
-    daoenergy.insert1(device, function(result){
+router.post('/createmain', function(req,res,next){
+    const MainP = req.body;
+    daoenergy.insert1(MainP, function(result){
         res.send("done");
     })
 });
@@ -57,47 +57,36 @@ router.post('/login', function(req,res,next){
 });
 
 router.post('/delete', function(req,res,next){
-    const device = req.body;
-    daoenergy.delete(device.ID, function(result){
+    const MainP = req.body;
+    daoenergy.delete(MainP.ID, function(result){
         res.send("done");
     })
 });
-router.post('/updateton', function(req,res,next){
-    const device = req.body;
-    daoenergy.update(device, function(result){
+router.post('/updateMon', function(req,res,next){
+    const MainP = req.body;
+    daoenergy.update(MainP, function(result){
         res.send("done");
     })
 });
-router.post('/updatetoff', function(req,res,next){
-    const device = req.body;
-    daoenergy.update1(device, function(result){
+router.post('/updateMoff', function(req,res,next){
+    const MainP = req.body;
+    daoenergy.update1(MainP, function(result){
         res.send("done");
     })
 });
-router.post('/updatelon', function(req,res,next){
-    const device = req.body;
-    daoenergy.update2(device, function(result){
+router.post('/updateSon', function(req,res,next){
+    const SolarP = req.body;
+    daoenergy.update2(SolarP, function(result){
         res.send("done");
     })
 });
-router.post('/updateloff', function(req,res,next){
-    const device = req.body;
-    daoenergy.update3(device, function(result){
+router.post('/updateSoff', function(req,res,next){
+    const SolarP = req.body;
+    daoenergy.update3(SolarP, function(result){
         res.send("done");
     })
 });
-router.post('/updatehon', function(req,res,next){
-    const device = req.body;
-    daoenergy.update4(device, function(result){
-        res.send("done");
-    })
-});
-router.post('/updatehoff', function(req,res,next){
-    const device = req.body;
-    daoenergy.update5(device, function(result){
-        res.send("done");
-    })
-});
+
 
 
 module.exports = router;

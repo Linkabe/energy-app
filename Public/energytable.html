@@ -27,6 +27,7 @@
         }
         table{
             width: 80%;
+            float: left;
             margin-bottom: 20px;
             border-collapse: collapse;
         }
@@ -114,24 +115,25 @@
     <thead>
     <tr>
         <th>Select</th>
-        <th>Energy Source</th>
+        <th>Power Source</th>
         <th>Status</th>
+        <th>TimeStamp</th>
     </tr>
     </thead>
-    <tbody>                  
-    </tbody>       
+    <tbody> 
+                             
+    </tbody> 
+      
 </table>
 <h4>&nbsp;&nbsp;Options</h4>
-                        <form action="/mainpower/on" method="post">&nbsp;
-                        <button type="submit" class="buttonlon">On</button>
-                        <button type="submit" formmethod="post" formaction="/mainpower/off" class="buttonloff">Off</button>
-                        </form>
-                        <br>
-
-                        <br><form action="/solarpower/on" method="post">&nbsp;
-                        <button type="submit" class="buttonton">On</button>
-                        <button type="submit" formmethod="post" formaction="/solarpower/off" class="buttontoff">Off</button>
-                        </form><br><br><br>
+            <form action="/mainpower/on" method="post">&nbsp;
+            <button type="submit" class="buttonMon">On</button>
+            <button type="submit" formmethod="post" formaction="/mainpower/off" class="buttonMoff">Off</button>
+            </form>
+            <br><form action="/solarpower/on" method="post">&nbsp;
+            <button type="submit" class="buttonSon">On</button>
+            <button type="submit" formmethod="post" formaction="/solarpower/off" class="buttonSoff">Off</button>
+            </form><br><br><br>
             
 
 <div><button type="button" class="delete-row">Delete Row</button></div>
@@ -226,13 +228,13 @@
                     $("#inputForm")[0].reset();
                 });});
 
-            function populateTable(energy) {
+            function populateTable(energys) {
                 var table = document.getElementById("Energy_table");
                 var len = energys.length;
 
                 for (var i = 0; i < len; i++) {
                     var energy = energys[i];
-                    var markup = "<tr><td><input type='checkbox' name='record'></td><td id='PowerSource' class='powersource'>" + energy.PowerSource + "</td><td id='Status' class='status'>" + energy.Status + "</td><td id='PowerSource' class='powersource'>" + energy.PowerSource + "</td><td id='Date1' class='date1'>" + energy.TimeStamp + "</td></tr>";
+                    var markup = "<tr><td><input type='checkbox' name='record'></td><td id='PowerSource' class='powersource'>" + energy.PowerSource + "</td><td id='Status' class='status'>" + energy.Status + "</td><td id='Date1' class='date1'>" + energy.Timestamp + "</td></tr>";
                     $("table tbody").append(markup);
                 }
             }
@@ -291,16 +293,16 @@
 
             });
 
-            $(".buttonton").click(function () {
-                var device ={
-                 Device: document.getElementsByClassName("device")[2].innerHTML,
+            $(".buttonMon").click(function () {
+                var MainP ={
+                 MPower: document.getElementsByClassName("powersource")[0].innerHTML,
                  Status: "On", 
                 };
-                 console.log(device);
+                 console.log(MainP);
                  $.ajax({
                     url: "/energy/createme",
                     method: "POST",
-                    data: device,
+                    data: MainP,
                     dataType: "HTML",
                     success: function (result) {
                         console.log(result);
@@ -311,7 +313,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/energy/updateton",
+                    url: "/energy/updateMon",
                     method: "POST",
                     data: "",
                     dataType: "HTML",
@@ -324,16 +326,16 @@
                     }
                 });
             });
-            $(".buttontoff").click(function () {
-                var device ={
-                 Device: document.getElementsByClassName("device")[2].innerHTML,
-                 Status: "Off",  
+            $(".buttonMoff").click(function () {
+                var MainP ={
+                 MPower: document.getElementsByClassName("powersource")[0].innerHTML,
+                 Status: "Off", 
                 };
-                 console.log(device);
+                 console.log(MainP);
                  $.ajax({
-                    url: "/energy/createme",
+                    url: "/energy/createmain",
                     method: "POST",
-                    data: device,
+                    data: MainP,
                     dataType: "HTML",
                     success: function (result) {
                         console.log(result);
@@ -344,7 +346,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/energy/updatetoff",
+                    url: "/energy/updateMoff",
                     method: "POST",
                     data: "",
                     dataType: "HTML",
@@ -358,16 +360,16 @@
                 });
             });
 
-            $(".buttonlon").click(function () {
-                var device ={
-                 Device: document.getElementsByClassName("device")[0].innerHTML,
+            $(".buttonSon").click(function () {
+                var SolarP ={
+                 Spower: document.getElementsByClassName("powersource")[1].innerHTML,
                  Status: "On",  
                 };
-                 console.log(device);
+                 console.log(SolarP);
                  $.ajax({
-                    url: "/energy/createme",
+                    url: "/energy/createsolar",
                     method: "POST",
-                    data: device,
+                    data: SolarP,
                     dataType: "HTML",
                     success: function (result) {
                         console.log(result);
@@ -379,7 +381,7 @@
                 });
                 console.log("Starting update")
                 $.ajax({
-                    url: "/energy/updatelon",
+                    url: "/energy/updateSon",
                     method: "POST",
                     data: "",
                     dataType: "HTML",
@@ -392,16 +394,16 @@
                     }
                 });
             });
-            $(".buttonloff").click(function () {
-                var device ={
-                 Device: document.getElementsByClassName("device")[0].innerHTML,
+            $(".buttonSoff").click(function () {
+                var SolarP ={
+                 Spower: document.getElementsByClassName("powersource")[1].innerHTML,
                  Status: "Off",  
                 };
-                 console.log(device);
+                 console.log(SolarP);
                  $.ajax({
                     url: "/energy/createme",
                     method: "POST",
-                    data: device,
+                    data: SolarP,
                     dataType: "HTML",
                     success: function (result) {
                         console.log(result);
@@ -412,73 +414,7 @@
                     }
                 });
                 $.ajax({
-                    url: "/energy/updateloff",
-                    method: "POST",
-                    data: "",
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
-            });
-            $(".buttonhon").click(function () {
-                var device ={
-                 Device: document.getElementsByClassName("device")[1].innerHTML,
-                 Status: "On",  
-                };
-                 console.log(device);
-                 $.ajax({
-                    url: "/energy/createme",
-                    method: "POST",
-                    data: device,
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
-                $.ajax({
-                    url: "/energy/updatehon",
-                    method: "POST",
-                    data: "",
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
-            });
-            $(".buttonhoff").click(function () {
-                var device ={
-                 Device: document.getElementsByClassName("device")[1].innerHTML,
-                 Status: "Off",  
-                };
-                 console.log(device);
-                 $.ajax({
-                    url: "/energy/createme",
-                    method: "POST",
-                    data: device,
-                    dataType: "HTML",
-                    success: function (result) {
-                        console.log(result);
-                        $('#response').html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error: " + error);
-                    }
-                });
-                $.ajax({
-                    url: "/energy/updatehoff",
+                    url: "/energy/updateSoff",
                     method: "POST",
                     data: "",
                     dataType: "HTML",
