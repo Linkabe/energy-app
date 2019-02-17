@@ -186,13 +186,13 @@ request(url, function (err, response, body) {
   if(err){
     console.log('error:', error);
   } else {
-    var intervalID = setInterval(checkWeatherAPI, 900000);
+    var intervalID = setInterval(checkWeatherAPI, 1000000);
     let weather = JSON.parse(body)
 
        var Tempurature = weather.main.temp - 273.15
        var Pressure = weather.main.pressure
        var Humidity = weather.main.humidity
-       var WindSpeed = weather.wind.speed
+       var WindSpeed = weather.wind.speed * 3.6
        var Description = weather.weather[0].description
        var CloudCover = weather.clouds.all
        var Area = weather.name
